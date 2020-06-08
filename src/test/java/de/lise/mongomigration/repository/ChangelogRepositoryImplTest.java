@@ -22,7 +22,7 @@ public class ChangelogRepositoryImplTest extends AbstractMongoDBTest {
         ChangelogRepositoryImpl repository = new ChangelogRepositoryImpl(template);
 
         Method method = this.getClass().getMethod("testMethod", MongoDatabase.class);
-        ChangelogDAO dao = repository.saveChangelog(new ChangelogDAO(method));
+        ChangelogDAO dao = repository.saveChangelog(new ChangelogDAO(this.getClass(), method));
 
         Assertions.assertThat(dao)
                 .isNotNull()
@@ -36,7 +36,7 @@ public class ChangelogRepositoryImplTest extends AbstractMongoDBTest {
         ChangelogRepositoryImpl repository = new ChangelogRepositoryImpl(getTemplateForDatabase("test"));
         Method method = this.getClass().getMethod("testMethod", MongoDatabase.class);
 
-        ChangelogDAO dao = repository.saveChangelog(new ChangelogDAO(method));
+        ChangelogDAO dao = repository.saveChangelog(new ChangelogDAO(this.getClass(), method));
         DeleteResult deleteResult = repository.deleteById(dao.getId());
         Optional<ChangelogDAO> selectedDao = repository.findById(dao.getId());
 
@@ -51,7 +51,7 @@ public class ChangelogRepositoryImplTest extends AbstractMongoDBTest {
         ChangelogRepositoryImpl repository = new ChangelogRepositoryImpl(getTemplateForDatabase("test"));
         Method method = this.getClass().getMethod("testMethod", MongoDatabase.class);
 
-        ChangelogDAO dao = repository.saveChangelog(new ChangelogDAO(method));
+        ChangelogDAO dao = repository.saveChangelog(new ChangelogDAO(this.getClass(), method));
         Optional<ChangelogDAO> selectedDao = repository.findById(dao.getId());
 
         Assertions.assertThat(selectedDao)

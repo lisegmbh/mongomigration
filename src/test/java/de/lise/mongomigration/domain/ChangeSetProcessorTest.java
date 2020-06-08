@@ -8,14 +8,16 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import org.springframework.data.util.Pair;
+
 public class ChangeSetProcessorTest {
 
     @Test
     public void findChangeSetMethodOfClassA() {
-        List<Method> methods = ChangeSetProcessor.changeSetMethods(A.class);
+        Pair<Class<?>, List<Method>> classListPair = ChangeSetProcessor.changeSetMethods(A.class);
 
         Assertions
-                .assertThat(methods)
+                .assertThat(classListPair.getSecond())
                 .hasSize(1)
                 .first()
                 .matches(m -> m.getName().equals("changeSetMethod"))
@@ -27,8 +29,8 @@ public class ChangeSetProcessorTest {
 
     @Test
     public void createDao() {
-        List<Method> methods = ChangeSetProcessor.changeSetMethods(A.class);
-        List<ChangelogDAO> changelogDAOS = ChangeSetProcessor.toDaos(methods);
+        Pair<Class<?>, List<Method>> classListPair = ChangeSetProcessor.changeSetMethods(A.class);
+        List<ChangelogDAO> changelogDAOS = ChangeSetProcessor.toDaos(classListPair);
 
         Assertions
                 .assertThat(changelogDAOS)

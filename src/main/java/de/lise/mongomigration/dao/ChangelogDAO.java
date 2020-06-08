@@ -26,14 +26,17 @@ public class ChangelogDAO {
     private String changeSetMethod;
 
     @Transient
-    private Method method;
+    private Class<?> clazz;
+
+    @Transient
+    private String methodName;
 
 
     public ChangelogDAO() {
     }
 
 
-    public ChangelogDAO(Method method) {
+    public ChangelogDAO(Class<?> clazz, Method method) {
         ChangeSet methodAnnotation = method.getAnnotation(ChangeSet.class);
         this.changeId = methodAnnotation.id();
         this.author = methodAnnotation.author();
@@ -41,7 +44,8 @@ public class ChangelogDAO {
         this.changeSetMethod = method.getName();
         this.changeLogClass = method.getClass().getName();
         this.timestamp = Instant.now();
-        this.method = method;
+        this.clazz = clazz;
+        this.methodName = method.getName();
     }
 
     public String getOrder() {
@@ -114,6 +118,8 @@ public class ChangelogDAO {
 
     public void executeMethod(MongoDatabase mongoDatabase)
             throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
-        method.invoke(method.getClass().getDeclaredConstructor().newInstance(), mongoDatabase);
+        Method method = clazz.getMethod(methodName, MongoDatabase.class);
+        Object obj = clazz.getDeclaredConstructor().newInstance();
+        method.invoke(obj, mongoDatabase);
     }
 }

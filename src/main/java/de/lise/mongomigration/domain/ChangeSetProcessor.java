@@ -7,19 +7,24 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.util.Pair;
+
 public class ChangeSetProcessor {
-    public static List<Method> changeSetMethods(Class<?> changelog) {
-        return Arrays
+    public static Pair<Class<?>,List<Method>> changeSetMethods(Class<?> changelog) {
+        return Pair.of(
+                changelog,
+                Arrays
                 .stream(changelog.getDeclaredMethods())
                 .filter(method -> method.isAnnotationPresent(ChangeSet.class))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList())
+        );
     }
 
 
-    public static List<ChangelogDAO> toDaos(List<Method> methods) {
-        return methods
+    public static List<ChangelogDAO> toDaos(Pair<Class<?>,List<Method>> methodsOfClass) {
+        return methodsOfClass.getSecond()
                 .stream()
-                .map(ChangelogDAO::new)
+                .map(m-> new ChangelogDAO(methodsOfClass.getFirst(), m))
                 .collect(Collectors.toList());
     }
 }
