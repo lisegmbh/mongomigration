@@ -61,7 +61,7 @@ public class ChangelogRepositoryImplTest extends AbstractMongoDBTest {
                 .isNotNull();
 
         Assertions.assertThat(selectedDao.get())
-                .isEqualToIgnoringGivenFields(dao, "id", "timestamp");
+                .isEqualToIgnoringGivenFields(dao, "id", "timestamp", "clazz", "methodName");
 
     }
 
